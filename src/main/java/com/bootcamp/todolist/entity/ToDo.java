@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Document
@@ -14,7 +15,16 @@ public class ToDo {
     private boolean done;
     private Set<String> tagIds;
 
-    public ToDo() {}
+    public ToDo() {
+        this.done = false;
+        this.tagIds = new HashSet<>();
+    }
+
+    public ToDo(String message) {
+        this.message = message;
+        this.done = false;
+        this.tagIds = new HashSet<>();;
+    }
 
     public String getId() {
         return id;
