@@ -1,6 +1,7 @@
 package com.bootcamp.todolist.service;
 
 import com.bootcamp.todolist.entity.Tag;
+import com.bootcamp.todolist.exception.TagNotFoundException;
 import com.bootcamp.todolist.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,13 @@ public class TagService {
 
     public Tag add(Tag tag) {
         return this.tagRepository.insert(tag);
+    }
+
+    public void delete(String id) throws TagNotFoundException {
+        if(!this.tagRepository.existsById(id)) {
+            throw new TagNotFoundException();
+        }
+
+        this.tagRepository.deleteById(id);
     }
 }
