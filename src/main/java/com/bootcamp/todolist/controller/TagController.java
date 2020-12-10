@@ -30,7 +30,7 @@ public class TagController {
     private TagMapper tagMapper;
 
     @GetMapping
-    public List<TagResponse> getAll() {
+    public List<TagResponse> findAll() {
         return this.tagMapper.toResponse(this.tagService.findAll());
     }
 
