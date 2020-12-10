@@ -15,4 +15,8 @@ public class TagService {
     public List<Tag> findAll() {
         return this.tagRepository.findAll();
     }
+
+    public Tag add(Tag tag) {
+        return this.tagRepository.insert(tag);
+    }
 }

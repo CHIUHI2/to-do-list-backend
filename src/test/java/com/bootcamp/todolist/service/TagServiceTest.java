@@ -40,4 +40,19 @@ public class TagServiceTest {
         //then
         assertEquals(tags, returnedTags);
     }
+
+    @Test
+    void should_return_correct_tag_when_add_given_not_existed_tag() {
+        //given
+        Tag tag = new Tag("Tag1", "red");
+
+        when(this.tagRepository.insert(tag)).thenReturn(tag);
+
+        //when
+        Tag returnedTag = this.tagService.add(tag);
+
+        //then
+        assertEquals(tag.getMessage(), returnedTag.getMessage());
+        assertEquals(tag.getColor(), returnedTag.getColor());
+    }
 }
