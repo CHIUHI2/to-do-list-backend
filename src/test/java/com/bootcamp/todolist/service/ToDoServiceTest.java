@@ -1,6 +1,7 @@
 package com.bootcamp.todolist.service;
 
 import com.bootcamp.todolist.entity.ToDo;
+import com.bootcamp.todolist.exception.ToDoNotFoundException;
 import com.bootcamp.todolist.repository.ToDoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -54,5 +56,36 @@ public class ToDoServiceTest {
         //then
         assertEquals(toDo.getMessage(), returnedToDo.getMessage());
         assertEquals(toDo.getTagIds(), returnedToDo.getTagIds());
+    }
+
+    @Test
+    void should_return_replaced_todo_when_replace_given_found_id() throws ToDoNotFoundException {
+        //given
+        ToDo toDo = new ToDo("ToDO");
+
+        when(this.toDoRepository.existsById("1")).thenReturn(true);
+        when(this.toDoRepository.save(toDo)).thenReturn(toDo);
+
+        //when
+        ToDo returnedToDo = this.toDoService.replace("1", toDo);
+
+        //then
+        assertEquals("1", returnedToDo.getId());
+        assertEquals(toDo.getMessage(), returnedToDo.getMessage());
+        assertEquals(toDo.getTagIds(), returnedToDo.getTagIds());
+    }
+
+    @Test
+    void should_throw_todo_not_found_exception_when_replace_given_not_found_id() {
+        //given
+        ToDo toDo = new ToDo("ToDO");
+
+        when(this.toDoRepository.existsById("1")).thenReturn(false);
+
+        //then
+        assertThrows(ToDoNotFoundException.class, () -> {
+            //when
+            this.toDoService.replace("1", toDo);
+        });
     }
 }
