@@ -5,7 +5,7 @@ import java.util.Set;
 public class ToDoRequest {
     private String message;
     private boolean done;
-    private Set<String> tagIds;
+    private Set<String> tags;
 
     public String getMessage() {
         return message;
@@ -23,11 +23,11 @@ public class ToDoRequest {
         this.done = done;
     }
 
-    public Set<String> getTagIds() {
-        return tagIds;
+    public Set<String> getTags() {
+        return tags;
     }
 
-    public void setTagIds(Set<String> tagIds) {
-        this.tagIds = tagIds;
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 }

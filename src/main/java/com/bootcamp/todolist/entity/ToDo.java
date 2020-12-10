@@ -13,17 +13,17 @@ public class ToDo {
     private String id;
     private String message;
     private boolean done;
-    private Set<String> tagIds;
+    private Set<String> tags;
 
     public ToDo() {
         this.done = false;
-        this.tagIds = new HashSet<>();
+        this.tags = new HashSet<>();
     }
 
     public ToDo(String message) {
         this.message = message;
         this.done = false;
-        this.tagIds = new HashSet<>();;
+        this.tags = new HashSet<>();;
     }
 
     public String getId() {
@@ -50,11 +50,11 @@ public class ToDo {
         this.done = done;
     }
 
-    public Set<String> getTagIds() {
-        return tagIds;
+    public Set<String> getTags() {
+        return tags;
     }
 
-    public void setTagIds(Set<String> tagIds) {
-        this.tagIds = tagIds;
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 }

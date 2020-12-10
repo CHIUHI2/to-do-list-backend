@@ -57,7 +57,7 @@ public class ToDoServiceTest {
 
         //then
         assertEquals(toDo.getMessage(), returnedToDo.getMessage());
-        assertEquals(toDo.getTagIds(), returnedToDo.getTagIds());
+        assertEquals(toDo.getTags(), returnedToDo.getTags());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ToDoServiceTest {
         //then
         assertEquals("1", returnedToDo.getId());
         assertEquals(toDo.getMessage(), returnedToDo.getMessage());
-        assertEquals(toDo.getTagIds(), returnedToDo.getTagIds());
+        assertEquals(toDo.getTags(), returnedToDo.getTags());
     }
 
     @Test
