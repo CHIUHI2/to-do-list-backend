@@ -1,12 +1,17 @@
 package com.bootcamp.todolist.controller;
 
+import com.bootcamp.todolist.dto.TagRequest;
 import com.bootcamp.todolist.dto.TagResponse;
 import com.bootcamp.todolist.mapper.TagMapper;
 import com.bootcamp.todolist.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,5 +29,12 @@ public class TagController {
     @GetMapping
     public List<TagResponse> getAll() {
         return this.tagMapper.toResponse(this.tagService.findAll());
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TagResponse add(@RequestBody TagRequest tagRequest) {
+        return this.tagMapper.toResponse(this.tagService.add(this.tagMapper.toEntity(tagRequest)));
+
     }
 }
