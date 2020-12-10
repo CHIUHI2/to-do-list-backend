@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,9 +73,9 @@ public class ToDoIntegrationTest {
         //when
         //then
         this.mockMvc.perform(post(apiBaseUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody.toString())
-        ).andExpect(status().isCreated())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody.toString())
+                ).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.message").value("ToDo"))
                 .andExpect(jsonPath("$.done").isBoolean())
@@ -85,5 +86,54 @@ public class ToDoIntegrationTest {
         assertEquals("ToDo", toDos.get(0).getMessage());
         assertFalse(toDos.get(0).isDone());
         assertEquals(Collections.emptySet(), toDos.get(0).getTags());
+    }
+
+    @Test
+    void should_return_replaced_todo_when_replace_given_found_id() throws Exception {
+        //given
+        ToDo toDo = new ToDo("ToDo");
+        ToDo addedToDo = this.toDoRepository.save(toDo);
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("message", "ToDo1");
+
+        //when
+        //then
+        this.mockMvc.perform(put(apiBaseUrl + "/" + addedToDo.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody.toString())
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.message").value("ToDo1"))
+                .andExpect(jsonPath("$.done").isBoolean())
+                .andExpect(jsonPath("$.tags").isEmpty());
+
+        List<ToDo> toDos = this.toDoRepository.findAll();
+        assertEquals(1, toDos.size());
+        assertEquals(addedToDo.getId(), toDos.get(0).getId());
+        assertEquals("ToDo1", toDos.get(0).getMessage());
+        assertFalse(toDos.get(0).isDone());
+        assertEquals(Collections.emptySet(), toDos.get(0).getTags());
+    }
+
+    @Test
+    void should_return_404_when_replace_given_not_found_id_and_employee() throws Exception {
+        //given
+        ToDo toDo = new ToDo("ToDo");
+        ToDo addedToDo = this.toDoRepository.save(toDo);
+        this.toDoRepository.deleteAll();
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("message", "ToDo1");
+
+        //when
+        //then
+        this.mockMvc.perform(put("/employees/" + addedToDo.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody.toString())
+                ).andExpect(status().isNotFound());
+
+        List<ToDo> toDos = this.toDoRepository.findAll();
+        assertEquals(0, toDos.size());
     }
 }
