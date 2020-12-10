@@ -4,10 +4,12 @@ import com.bootcamp.todolist.dto.TagRequest;
 import com.bootcamp.todolist.dto.TagResponse;
 import com.bootcamp.todolist.entity.Tag;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class TagMapper {
     public Tag toEntity(TagRequest tagRequest) {
         Tag tag = new Tag();
