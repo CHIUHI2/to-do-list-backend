@@ -15,4 +15,8 @@ public class ToDoService {
     public List<ToDo> findAll() {
         return this.toDoRepository.findAll();
     }
+
+    public ToDo add(ToDo toDo) {
+        return this.toDoRepository.insert(toDo);
+    }
 }

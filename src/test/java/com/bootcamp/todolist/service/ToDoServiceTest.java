@@ -40,4 +40,19 @@ public class ToDoServiceTest {
         //then
         assertEquals(toDos, returnedToDos);
     }
+
+    @Test
+    void should_return_correct_todo_when_add_given_not_existed_todo() {
+        //given
+        ToDo toDo = new ToDo("ToDo");
+
+        when(this.toDoRepository.insert(toDo)).thenReturn(toDo);
+
+        //when
+        ToDo returnedToDo = this.toDoService.add(toDo);
+
+        //then
+        assertEquals(toDo.getMessage(), returnedToDo.getMessage());
+        assertEquals(toDo.getTagIds(), returnedToDo.getTagIds());
+    }
 }
