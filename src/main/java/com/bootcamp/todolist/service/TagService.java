@@ -13,6 +13,9 @@ public class TagService {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired
+    private ToDoService toDoService;
+
     public List<Tag> findAll() {
         return this.tagRepository.findAll();
     }
@@ -25,6 +28,8 @@ public class TagService {
         if(!this.tagRepository.existsById(id)) {
             throw new TagNotFoundException();
         }
+
+        this.toDoService.removeTagFromRespectiveToDos(id);
 
         this.tagRepository.deleteById(id);
     }

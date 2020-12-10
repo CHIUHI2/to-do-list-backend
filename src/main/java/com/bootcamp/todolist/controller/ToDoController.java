@@ -2,12 +2,12 @@ package com.bootcamp.todolist.controller;
 
 import com.bootcamp.todolist.dto.ToDoRequest;
 import com.bootcamp.todolist.dto.ToDoResponse;
-import com.bootcamp.todolist.entity.ToDo;
 import com.bootcamp.todolist.exception.ToDoNotFoundException;
 import com.bootcamp.todolist.mapper.ToDoMapper;
 import com.bootcamp.todolist.service.ToDoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/todos")
+@CrossOrigin
 public class ToDoController {
     @Autowired
     private ToDoService toDoService;

@@ -1,8 +1,10 @@
 package com.bootcamp.todolist.service;
 
 import com.bootcamp.todolist.entity.Tag;
+import com.bootcamp.todolist.entity.ToDo;
 import com.bootcamp.todolist.exception.TagNotFoundException;
 import com.bootcamp.todolist.repository.TagRepository;
+import com.bootcamp.todolist.repository.ToDoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,10 +26,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class TagServiceTest {
     @Mock
-    TagRepository tagRepository;
+    private TagRepository tagRepository;
+
+    @Mock
+    private ToDoRepository toDoRepository;
 
     @InjectMocks
-    TagService tagService;
+    private TagService tagService;
 
     @Test
     void should_return_all_tags_when_find_all_given_all_tags() {
@@ -61,19 +67,23 @@ public class TagServiceTest {
     }
 
     @Test
-    void should_call_company_repository_delete_by_id_once_when_delete_given_found_company_id() throws TagNotFoundException {
+    void should_call_tag_repository_delete_by_id_once_when_delete_given_found_id() throws TagNotFoundException {
         //given
         when(this.tagRepository.existsById("1")).thenReturn(true);
+
+        ToDo toDo = new ToDo("message");
+        when(this.toDoRepository.findByTags("1")).thenReturn(Collections.singletonList(toDo));
 
         //when
         this.tagService.delete("1");
 
         //then
+        verify(this.toDoRepository, times(1)).save(toDo);
         verify(this.tagRepository, times(1)).deleteById("1");
     }
 
     @Test
-    void should_throw_company_not_found_exception_when_delete_given_not_found_company_id() {
+    void should_throw_tag_not_found_exception_when_delete_given_not_found_id() {
         //given
         when(this.tagRepository.existsById("1")).thenReturn(false);
 

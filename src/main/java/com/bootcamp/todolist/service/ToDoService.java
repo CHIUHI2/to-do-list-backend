@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ToDoService {
@@ -37,5 +38,16 @@ public class ToDoService {
         }
 
         this.toDoRepository.deleteById(id);
+    }
+
+    public void removeTagFromRespectiveToDos(String tagId) {
+        List<ToDo> toDos = this.toDoRepository.findByTags(tagId);
+
+        toDos.forEach(toDo -> {
+            Set<String> tags = toDo.getTags();
+            tags.remove(tagId);
+            toDo.setTags(tags);
+            this.toDoRepository.save(toDo);
+        });
     }
 }

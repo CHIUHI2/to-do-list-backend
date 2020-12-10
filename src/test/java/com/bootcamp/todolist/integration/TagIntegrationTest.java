@@ -1,7 +1,9 @@
 package com.bootcamp.todolist.integration;
 
 import com.bootcamp.todolist.entity.Tag;
+import com.bootcamp.todolist.entity.ToDo;
 import com.bootcamp.todolist.repository.TagRepository;
+import com.bootcamp.todolist.repository.ToDoRepository;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -29,6 +34,9 @@ public class TagIntegrationTest {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private ToDoRepository toDoRepository;
 
     private static final String apiBaseUrl = "/tags";
 
@@ -91,6 +99,10 @@ public class TagIntegrationTest {
         Tag tag2 = new Tag("Tag2", "green");
         Tag addedTag2 = this.tagRepository.save(tag2);
 
+        ToDo toDo = new ToDo("ToDo");
+        toDo.setTags(new HashSet<>(Arrays.asList(addedTag1.getId(), addedTag2.getId())));
+        this.toDoRepository.save(toDo);
+
         //when
         //then
         this.mockMvc.perform(delete(apiBaseUrl + "/" + addedTag1.getId()))
@@ -99,8 +111,10 @@ public class TagIntegrationTest {
         List<Tag> tags = this.tagRepository.findAll();
         assertEquals(1, tags.size());
         assertEquals(addedTag2.getId(), tags.get(0).getId());
-    }
 
+        List<ToDo> toDos = this.toDoRepository.findAll();
+        assertEquals(Collections.singleton(tag2.getId()), toDos.get(0).getTags());
+    }
     @Test
     void should_return_404_when_delete_given_not_found_id() throws Exception {
         //given
