@@ -17,7 +17,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -128,12 +128,52 @@ public class ToDoIntegrationTest {
 
         //when
         //then
-        this.mockMvc.perform(put("/employees/" + addedToDo.getId())
+        this.mockMvc.perform(put(apiBaseUrl + "/" + addedToDo.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody.toString())
                 ).andExpect(status().isNotFound());
 
         List<ToDo> toDos = this.toDoRepository.findAll();
         assertEquals(0, toDos.size());
+    }
+
+    @Test
+    void should_return_204_when_delete_given_found_id() throws Exception {
+        //given
+        ToDo toDo1 = new ToDo("ToDo1");
+        ToDo addedToDo1 = this.toDoRepository.save(toDo1);
+
+        ToDo toDo2 = new ToDo("ToDo2");
+        ToDo addedToDo2 = this.toDoRepository.save(toDo2);
+
+        //when
+        //then
+        this.mockMvc.perform(delete(apiBaseUrl + "/" + addedToDo1.getId()))
+                .andExpect(status().isNoContent());
+
+        List<ToDo> toDos = this.toDoRepository.findAll();
+        assertEquals(1, toDos.size());
+        assertEquals(addedToDo2.getId(), toDos.get(0).getId());
+    }
+
+    @Test
+    void should_return_404_when_delete_given_not_found_id() throws Exception {
+        //given
+        ToDo toDo1 = new ToDo("ToDo1");
+        ToDo addedToDo1 = this.toDoRepository.save(toDo1);
+
+        ToDo toDo2 = new ToDo("ToDo2");
+        ToDo addedToDo2 = this.toDoRepository.save(toDo2);
+
+        this.toDoRepository.deleteById(addedToDo1.getId());
+
+        //when
+        //then
+        this.mockMvc.perform(delete("/employees/" + addedToDo1.getId()))
+                .andExpect(status().isNotFound());
+
+        List<ToDo> toDos = this.toDoRepository.findAll();
+        assertEquals(1, toDos.size());
+        assertEquals(addedToDo2.getId(), toDos.get(0).getId());
     }
 }
