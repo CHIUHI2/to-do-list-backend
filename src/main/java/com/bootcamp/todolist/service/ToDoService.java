@@ -30,4 +30,12 @@ public class ToDoService {
 
         return this.toDoRepository.save(toDo);
     }
+
+    public void delete(String id) throws ToDoNotFoundException {
+        if(!this.toDoRepository.existsById(id)) {
+            throw new ToDoNotFoundException();
+        }
+
+        this.toDoRepository.deleteById(id);
+    }
 }

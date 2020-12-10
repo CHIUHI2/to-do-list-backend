@@ -15,6 +15,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -86,6 +88,30 @@ public class ToDoServiceTest {
         assertThrows(ToDoNotFoundException.class, () -> {
             //when
             this.toDoService.replace("1", toDo);
+        });
+    }
+
+    @Test
+    void should_call_todo_repository_delete_by_id_once_when_delete_given_found_id() throws ToDoNotFoundException {
+        //given
+        when(this.toDoRepository.existsById("1")).thenReturn(true);
+
+        //when
+        this.toDoService.delete("1");
+
+        //then
+        verify(this.toDoRepository, times(1)).deleteById("1");
+    }
+
+    @Test
+    void should_throw_todo_not_found_exception_when_delete_given_not_found_id() {
+        //given
+        when(this.toDoRepository.existsById("1")).thenReturn(false);
+
+        //then
+        assertThrows(ToDoNotFoundException.class, () -> {
+            //then
+            this.toDoService.delete("1");
         });
     }
 }
