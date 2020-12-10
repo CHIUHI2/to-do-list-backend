@@ -3,9 +3,18 @@ package com.bootcamp.todolist.dto;
 import java.util.Set;
 
 public class ToDoResponse {
+    private String id;
     private String message;
     private boolean done;
     private Set<String> tagIds;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getMessage() {
         return message;
