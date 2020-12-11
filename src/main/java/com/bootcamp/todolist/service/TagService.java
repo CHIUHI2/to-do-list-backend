@@ -1,6 +1,7 @@
 package com.bootcamp.todolist.service;
 
 import com.bootcamp.todolist.entity.Tag;
+import com.bootcamp.todolist.exception.TagDuplicatedException;
 import com.bootcamp.todolist.exception.TagNotFoundException;
 import com.bootcamp.todolist.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,11 @@ public class TagService {
         return this.tagRepository.findAll();
     }
 
-    public Tag add(Tag tag) {
+    public Tag add(Tag tag) throws TagDuplicatedException {
+        if(this.tagRepository.existsByMessage(tag.getMessage())) {
+            throw new TagDuplicatedException();
+        }
+
         return this.tagRepository.insert(tag);
     }
 

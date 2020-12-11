@@ -2,6 +2,7 @@ package com.bootcamp.todolist.service;
 
 import com.bootcamp.todolist.entity.Tag;
 import com.bootcamp.todolist.entity.ToDo;
+import com.bootcamp.todolist.exception.TagDuplicatedException;
 import com.bootcamp.todolist.exception.TagNotFoundException;
 import com.bootcamp.todolist.repository.TagRepository;
 import com.bootcamp.todolist.repository.ToDoRepository;
@@ -52,10 +53,11 @@ public class TagServiceTest {
     }
 
     @Test
-    void should_return_correct_tag_when_add_given_not_existed_tag() {
+    void should_return_correct_tag_when_add_given_not_existed_tag() throws TagDuplicatedException {
         //given
         Tag tag = new Tag("Tag1", "red");
 
+        when(this.tagRepository.existsByMessage(tag.getMessage())).thenReturn(false);
         when(this.tagRepository.insert(tag)).thenReturn(tag);
 
         //when
@@ -64,6 +66,20 @@ public class TagServiceTest {
         //then
         assertEquals(tag.getMessage(), returnedTag.getMessage());
         assertEquals(tag.getColor(), returnedTag.getColor());
+    }
+
+    @Test
+    void should_throw_tag_duplicated_exception_when_add_given_existed_tag() throws TagDuplicatedException {
+        //given
+        Tag tag = new Tag("Tag1", "red");
+
+        when(this.tagRepository.existsByMessage(tag.getMessage())).thenReturn(true);
+
+        //then
+        assertThrows(TagDuplicatedException.class, () -> {
+            //when
+            this.tagService.add(tag);
+        });
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.bootcamp.todolist.controller;
 
 import com.bootcamp.todolist.dto.TagRequest;
 import com.bootcamp.todolist.dto.TagResponse;
+import com.bootcamp.todolist.exception.TagDuplicatedException;
 import com.bootcamp.todolist.exception.TagNotFoundException;
 import com.bootcamp.todolist.mapper.TagMapper;
 import com.bootcamp.todolist.service.TagService;
@@ -36,7 +37,7 @@ public class TagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TagResponse add(@RequestBody TagRequest tagRequest) {
+    public TagResponse add(@RequestBody TagRequest tagRequest) throws TagDuplicatedException {
         return this.tagMapper.toResponse(this.tagService.add(this.tagMapper.toEntity(tagRequest)));
 
     }

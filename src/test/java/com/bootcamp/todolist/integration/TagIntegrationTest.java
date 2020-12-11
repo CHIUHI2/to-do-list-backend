@@ -91,6 +91,27 @@ public class TagIntegrationTest {
     }
 
     @Test
+    void should_return_409_when_add_given_existed_tag() throws Exception {
+        //given
+        Tag tag = new Tag("Tag1", "red");
+        this.tagRepository.save(tag);
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("message", "Tag1");
+        requestBody.put("color", "red");
+
+        //when
+        //then
+        this.mockMvc.perform(post(apiBaseUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody.toString())
+                ).andExpect(status().isConflict());
+
+        List<Tag> tags = this.tagRepository.findAll();
+        assertEquals(1, tags.size());
+    }
+
+    @Test
     void should_return_204_when_delete_given_found_id() throws Exception {
         //given
         Tag tag1 = new Tag("Tag1", "red");
@@ -115,6 +136,7 @@ public class TagIntegrationTest {
         List<ToDo> toDos = this.toDoRepository.findAll();
         assertEquals(Collections.singleton(tag2.getId()), toDos.get(0).getTags());
     }
+
     @Test
     void should_return_404_when_delete_given_not_found_id() throws Exception {
         //given

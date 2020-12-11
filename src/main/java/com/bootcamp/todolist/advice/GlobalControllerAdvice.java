@@ -1,5 +1,6 @@
 package com.bootcamp.todolist.advice;
 
+import com.bootcamp.todolist.exception.TagDuplicatedException;
 import com.bootcamp.todolist.exception.TagNotFoundException;
 import com.bootcamp.todolist.exception.ToDoNotFoundException;
 import org.springframework.dao.DuplicateKeyException;
@@ -31,6 +32,12 @@ public class GlobalControllerAdvice {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler({DuplicateKeyException.class})
     public ErrorResponse handleDuplicateKey(DuplicateKeyException exception) {
+        return new ErrorResponse(HttpStatus.CONFLICT.name(), exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler({TagDuplicatedException.class})
+    public ErrorResponse handelTagDuplicated(TagDuplicatedException exception) {
         return new ErrorResponse(HttpStatus.CONFLICT.name(), exception.getMessage());
     }
 }
