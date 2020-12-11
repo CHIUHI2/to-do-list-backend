@@ -1,6 +1,7 @@
 package com.bootcamp.todolist.service;
 
 import com.bootcamp.todolist.entity.ToDo;
+import com.bootcamp.todolist.exception.ToDoDuplicatedException;
 import com.bootcamp.todolist.exception.ToDoNotFoundException;
 import com.bootcamp.todolist.repository.ToDoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,11 @@ public class ToDoService {
         return this.toDoRepository.findAll();
     }
 
-    public ToDo add(ToDo toDo) {
+    public ToDo add(ToDo toDo) throws ToDoDuplicatedException {
+        if(this.toDoRepository.existsByMessage(toDo.getMessage())) {
+            throw new ToDoDuplicatedException();
+        }
+
         return this.toDoRepository.insert(toDo);
     }
 

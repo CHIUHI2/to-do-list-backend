@@ -1,6 +1,7 @@
 package com.bootcamp.todolist.service;
 
 import com.bootcamp.todolist.entity.ToDo;
+import com.bootcamp.todolist.exception.ToDoDuplicatedException;
 import com.bootcamp.todolist.exception.ToDoNotFoundException;
 import com.bootcamp.todolist.repository.ToDoRepository;
 import org.junit.jupiter.api.Test;
@@ -46,10 +47,11 @@ public class ToDoServiceTest {
     }
 
     @Test
-    void should_return_correct_todo_when_add_given_not_existed_todo() {
+    void should_return_correct_todo_when_add_given_not_existed_todo() throws ToDoDuplicatedException {
         //given
         ToDo toDo = new ToDo("ToDo");
 
+        when(this.toDoRepository.existsByMessage(toDo.getMessage())).thenReturn(false);
         when(this.toDoRepository.insert(toDo)).thenReturn(toDo);
 
         //when
@@ -58,6 +60,20 @@ public class ToDoServiceTest {
         //then
         assertEquals(toDo.getMessage(), returnedToDo.getMessage());
         assertEquals(toDo.getTags(), returnedToDo.getTags());
+    }
+
+    @Test
+    void should_throws_todo_duplicated_exception_when_add_given__existed_todo() throws ToDoDuplicatedException {
+        //given
+        ToDo toDo = new ToDo("ToDo");
+
+        when(this.toDoRepository.existsByMessage(toDo.getMessage())).thenReturn(true);
+
+        //then
+        assertThrows(ToDoDuplicatedException.class, () -> {
+            //when
+            this.toDoService.add(toDo);
+        });
     }
 
     @Test

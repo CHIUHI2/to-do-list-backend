@@ -89,6 +89,26 @@ public class ToDoIntegrationTest {
     }
 
     @Test
+    void should_return_409_when_add_given_existed_todo() throws Exception {
+        //given
+        ToDo toDo = new ToDo("ToDo");
+        this.toDoRepository.save(toDo);
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("message", "ToDo");
+
+        //when
+        //then
+        this.mockMvc.perform(post(apiBaseUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody.toString())
+        ).andExpect(status().isConflict());
+
+        List<ToDo> toDos = this.toDoRepository.findAll();
+        assertEquals(1, toDos.size());
+    }
+
+    @Test
     void should_return_replaced_todo_when_replace_given_found_id() throws Exception {
         //given
         ToDo toDo = new ToDo("ToDo");

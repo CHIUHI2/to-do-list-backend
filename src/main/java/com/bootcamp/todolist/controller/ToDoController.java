@@ -2,6 +2,7 @@ package com.bootcamp.todolist.controller;
 
 import com.bootcamp.todolist.dto.ToDoRequest;
 import com.bootcamp.todolist.dto.ToDoResponse;
+import com.bootcamp.todolist.exception.ToDoDuplicatedException;
 import com.bootcamp.todolist.exception.ToDoNotFoundException;
 import com.bootcamp.todolist.mapper.ToDoMapper;
 import com.bootcamp.todolist.service.ToDoService;
@@ -37,7 +38,7 @@ public class ToDoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ToDoResponse add(@RequestBody ToDoRequest toDoRequest) {
+    public ToDoResponse add(@RequestBody ToDoRequest toDoRequest) throws ToDoDuplicatedException {
         return this.toDoMapper.toResponse(this.toDoService.add(this.toDoMapper.toEntity(toDoRequest)));
     }
 

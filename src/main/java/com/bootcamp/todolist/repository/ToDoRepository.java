@@ -6,5 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface ToDoRepository extends MongoRepository<ToDo, String> {
-    public List<ToDo> findByTags(String id);
+    List<ToDo> findByTags(String id);
+    boolean existsByMessage(String message);
 }
