@@ -1,11 +1,9 @@
 package com.bootcamp.todolist.service;
 
 import com.bootcamp.todolist.entity.Tag;
-import com.bootcamp.todolist.entity.ToDo;
 import com.bootcamp.todolist.exception.TagDuplicatedException;
 import com.bootcamp.todolist.exception.TagNotFoundException;
 import com.bootcamp.todolist.repository.TagRepository;
-import com.bootcamp.todolist.repository.ToDoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,7 +27,7 @@ public class TagServiceTest {
     private TagRepository tagRepository;
 
     @Mock
-    private ToDoRepository toDoRepository;
+    private ToDoService toDoService;
 
     @InjectMocks
     private TagService tagService;
@@ -87,14 +84,11 @@ public class TagServiceTest {
         //given
         when(this.tagRepository.existsById("1")).thenReturn(true);
 
-        ToDo toDo = new ToDo("message");
-        when(this.toDoRepository.findByTags("1")).thenReturn(Collections.singletonList(toDo));
-
         //when
         this.tagService.delete("1");
 
         //then
-        verify(this.toDoRepository, times(1)).save(toDo);
+        verify(this.toDoService, times(1)).removeTagFromRespectiveToDos("1");
         verify(this.tagRepository, times(1)).deleteById("1");
     }
 
