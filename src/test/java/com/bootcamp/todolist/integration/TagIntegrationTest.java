@@ -97,7 +97,7 @@ public class TagIntegrationTest {
         this.tagRepository.save(tag);
 
         JSONObject requestBody = new JSONObject();
-        requestBody.put("message", "Tag1");
+        requestBody.put("message", " Tag1 ");
         requestBody.put("color", "red");
 
         //when

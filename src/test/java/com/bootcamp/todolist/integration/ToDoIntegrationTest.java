@@ -95,7 +95,7 @@ public class ToDoIntegrationTest {
         this.toDoRepository.save(toDo);
 
         JSONObject requestBody = new JSONObject();
-        requestBody.put("message", "ToDo");
+        requestBody.put("message", " ToDo ");
 
         //when
         //then

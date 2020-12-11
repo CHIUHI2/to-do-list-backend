@@ -20,7 +20,7 @@ public class ToDoService {
     }
 
     public ToDo add(ToDo toDo) throws ToDoDuplicatedException {
-        if(this.toDoRepository.existsByMessage(toDo.getMessage())) {
+        if(this.toDoRepository.existsByMessage(toDo.getMessage().trim())) {
             throw new ToDoDuplicatedException();
         }
 

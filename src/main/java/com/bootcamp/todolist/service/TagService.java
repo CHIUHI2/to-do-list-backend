@@ -22,7 +22,7 @@ public class TagService {
     }
 
     public Tag add(Tag tag) throws TagDuplicatedException {
-        if(this.tagRepository.existsByMessage(tag.getMessage())) {
+        if(this.tagRepository.existsByMessage(tag.getMessage().trim())) {
             throw new TagDuplicatedException();
         }
 
